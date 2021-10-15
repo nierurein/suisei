@@ -1,6 +1,7 @@
 package route
 
 import (
+	"github.com/daniel5u/suisei/presenter/author"
 	"github.com/daniel5u/suisei/presenter/category"
 	"github.com/daniel5u/suisei/presenter/publisher"
 	"github.com/daniel5u/suisei/presenter/user"
@@ -11,6 +12,7 @@ type PresenterList struct {
 	UserPresenter      user.Presenter
 	CategoryPresenter  category.Presenter
 	PublisherPresenter publisher.Presenter
+	AuthorPresenter    author.Presenter
 }
 
 func (presenterList *PresenterList) RegisterRoute(e *echo.Echo) {
@@ -30,4 +32,9 @@ func (presenterList *PresenterList) RegisterRoute(e *echo.Echo) {
 	publisher.GET("", presenterList.PublisherPresenter.Fetch)
 	publisher.GET("/:id", presenterList.PublisherPresenter.GetByID)
 	publisher.POST("/register", presenterList.PublisherPresenter.Store)
+
+	author := e.Group("authors")
+	author.GET("", presenterList.AuthorPresenter.Fetch)
+	author.GET("/:id", presenterList.AuthorPresenter.GetByID)
+	author.POST("/register", presenterList.AuthorPresenter.Store)
 }
