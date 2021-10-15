@@ -28,19 +28,18 @@ func (userRepository *Repository) Fetch() ([]user.Domain, error) {
 		userDomains = append(userDomains, repositoryToDomain(userRecord))
 	}
 
-	return userDomains, err
+	return userDomains, nil
 }
 
 func (userRepository *Repository) GetByID(id int) (user.Domain, error) {
 	var userRecord User
-	var userDomain user.Domain
 
 	err := userRepository.DB.Where("id = ?", id).First(&userRecord).Error
 	if err != nil {
 		return user.Domain{}, err
 	}
 
-	userDomain = repositoryToDomain(userRecord)
+	userDomain := repositoryToDomain(userRecord)
 
 	return userDomain, nil
 }
@@ -48,7 +47,6 @@ func (userRepository *Repository) GetByID(id int) (user.Domain, error) {
 func (userRepository *Repository) Update(userDomain user.Domain, id int) (user.Domain, error) {
 	var userRecord User = domainToRepository(userDomain)
 	var userRecordAfter User
-	var userDomainAfter user.Domain
 
 	err := userRepository.DB.Where("id = ?", id).Updates(&userRecord).Error
 	if err != nil {
@@ -61,9 +59,9 @@ func (userRepository *Repository) Update(userDomain user.Domain, id int) (user.D
 		return user.Domain{}, err
 	}
 
-	userDomainAfter = repositoryToDomain(userRecordAfter)
+	userDomainAfter := repositoryToDomain(userRecordAfter)
 
-	return userDomainAfter, err
+	return userDomainAfter, nil
 }
 
 func (userRepository *Repository) Store(userDomain user.Domain) (user.Domain, error) {
@@ -87,5 +85,5 @@ func (userRepository *Repository) Delete(id int) error {
 		return err
 	}
 
-	return err
+	return nil
 }
