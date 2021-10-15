@@ -19,6 +19,10 @@ import (
 	_categoryPresenter "github.com/daniel5u/suisei/presenter/category"
 	_categoryRepository "github.com/daniel5u/suisei/repository/postgresql/category"
 	_categoryService "github.com/daniel5u/suisei/service/category"
+
+	_publisherPresenter "github.com/daniel5u/suisei/presenter/publisher"
+	_publisherRepository "github.com/daniel5u/suisei/repository/postgresql/publisher"
+	_publisherService "github.com/daniel5u/suisei/service/publisher"
 )
 
 func initConfig() {
@@ -50,6 +54,7 @@ func initDB() *gorm.DB {
 	DB.AutoMigrate(
 		&_userRepository.User{},
 		&_categoryRepository.Category{},
+		&_publisherRepository.Publisher{},
 	)
 
 	return DB
@@ -71,9 +76,14 @@ func main() {
 	categoryService := _categoryService.NewService(categoryRepository)
 	categoryPresenter := _categoryPresenter.NewPresenter(categoryService)
 
+	publisherRepository := _publisherRepository.NewRepository(db)
+	publisherService := _publisherService.NewService(publisherRepository)
+	publisherPresenter := _publisherPresenter.NewPresenter(publisherService)
+
 	routes := _route.PresenterList{
-		UserPresenter:     *userPresenter,
-		CategoryPresenter: *categoryPresenter,
+		UserPresenter:      *userPresenter,
+		CategoryPresenter:  *categoryPresenter,
+		PublisherPresenter: *publisherPresenter,
 	}
 	routes.RegisterRoute(e)
 
