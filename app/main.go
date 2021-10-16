@@ -69,7 +69,7 @@ func initDB() *gorm.DB {
 		panic(err.Error())
 	}
 
-	DB.AutoMigrate(
+	err = DB.AutoMigrate(
 		&_userRepository.User{},
 		&_categoryRepository.Category{},
 		&_publisherRepository.Publisher{},
@@ -79,6 +79,9 @@ func initDB() *gorm.DB {
 		&_bookauthorRepository.BookAuthor{},
 		&_booktransactionRepository.BookTransaction{},
 	)
+	if err != nil {
+		panic(err.Error())
+	}
 
 	return DB
 }
