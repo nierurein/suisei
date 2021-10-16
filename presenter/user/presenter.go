@@ -52,7 +52,10 @@ func (userPresenter *Presenter) GetByID(echoContext echo.Context) error {
 func (userPresenter *Presenter) Update(echoContext echo.Context) error {
 	var userRequest Request
 
-	echoContext.Bind(&userRequest)
+	err := echoContext.Bind(&userRequest)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
 	id, _ := strconv.Atoi(echoContext.Param("id"))
 
 	userDomain := requestToDomain(userRequest)
@@ -71,7 +74,10 @@ func (userPresenter *Presenter) Update(echoContext echo.Context) error {
 func (userPresenter *Presenter) Store(echoContext echo.Context) error {
 	var userRequest Request
 
-	echoContext.Bind(&userRequest)
+	err := echoContext.Bind(&userRequest)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
 
 	userDomain := requestToDomain(userRequest)
 

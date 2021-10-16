@@ -52,7 +52,10 @@ func (transactionPresenter *Presenter) GetByID(echoContext echo.Context) error {
 func (transactionPresenter *Presenter) Update(echoContext echo.Context) error {
 	var transactionRequest Request
 
-	echoContext.Bind(&transactionRequest)
+	err := echoContext.Bind(&transactionRequest)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
 	id, _ := strconv.Atoi(echoContext.Param("id"))
 
 	transactionDomain := requestToDomain(transactionRequest)
@@ -71,7 +74,10 @@ func (transactionPresenter *Presenter) Update(echoContext echo.Context) error {
 func (transactionPresenter *Presenter) Store(echoContext echo.Context) error {
 	var transactionRequest Request
 
-	echoContext.Bind(&transactionRequest)
+	err := echoContext.Bind(&transactionRequest)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
 
 	transactionDomain := requestToDomain(transactionRequest)
 

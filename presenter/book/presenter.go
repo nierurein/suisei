@@ -52,7 +52,10 @@ func (bookPresenter *Presenter) GetByID(echoContext echo.Context) error {
 func (bookPresenter *Presenter) Update(echoContext echo.Context) error {
 	var bookRequest Request
 
-	echoContext.Bind(&bookRequest)
+	err := echoContext.Bind(&bookRequest)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
 	id, _ := strconv.Atoi(echoContext.Param("id"))
 
 	bookDomain := requestToDomain(bookRequest)
@@ -71,7 +74,10 @@ func (bookPresenter *Presenter) Update(echoContext echo.Context) error {
 func (bookPresenter *Presenter) Store(echoContext echo.Context) error {
 	var bookRequest Request
 
-	echoContext.Bind(&bookRequest)
+	err := echoContext.Bind(&bookRequest)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
 
 	bookDomain := requestToDomain(bookRequest)
 

@@ -24,13 +24,16 @@ func (booktransactionPresenter *Presenter) StoreBatch(echoContext echo.Context) 
 
 	id, _ := strconv.Atoi(echoContext.Param("id"))
 
-	echoContext.Bind(&booktransactionRequest)
+	err := echoContext.Bind(&booktransactionRequest)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
 
 	for _, booktransactionRequestItem := range booktransactionRequest.Items {
 		booktransactionDomains = append(booktransactionDomains, requestItemToDomain(booktransactionRequestItem))
 	}
 
-	err := booktransactionPresenter.service.StoreBatch(booktransactionDomains, id)
+	err = booktransactionPresenter.service.StoreBatch(booktransactionDomains, id)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
