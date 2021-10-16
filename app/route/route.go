@@ -4,15 +4,17 @@ import (
 	"github.com/daniel5u/suisei/presenter/author"
 	"github.com/daniel5u/suisei/presenter/category"
 	"github.com/daniel5u/suisei/presenter/publisher"
+	"github.com/daniel5u/suisei/presenter/transaction"
 	"github.com/daniel5u/suisei/presenter/user"
 	"github.com/labstack/echo/v4"
 )
 
 type PresenterList struct {
-	UserPresenter      user.Presenter
-	CategoryPresenter  category.Presenter
-	PublisherPresenter publisher.Presenter
-	AuthorPresenter    author.Presenter
+	UserPresenter        user.Presenter
+	CategoryPresenter    category.Presenter
+	PublisherPresenter   publisher.Presenter
+	AuthorPresenter      author.Presenter
+	TransactionPresenter transaction.Presenter
 }
 
 func (presenterList *PresenterList) RegisterRoute(e *echo.Echo) {
@@ -37,4 +39,10 @@ func (presenterList *PresenterList) RegisterRoute(e *echo.Echo) {
 	author.GET("", presenterList.AuthorPresenter.Fetch)
 	author.GET("/:id", presenterList.AuthorPresenter.GetByID)
 	author.POST("/register", presenterList.AuthorPresenter.Store)
+
+	transaction := e.Group("transactions")
+	transaction.GET("", presenterList.TransactionPresenter.Fetch)
+	transaction.GET("/:id", presenterList.TransactionPresenter.GetByID)
+	transaction.PUT("/:id", presenterList.TransactionPresenter.Update)
+	transaction.POST("/register", presenterList.TransactionPresenter.Store)
 }

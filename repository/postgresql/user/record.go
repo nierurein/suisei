@@ -2,16 +2,18 @@ package user
 
 import (
 	"github.com/daniel5u/suisei/domain/user"
+	"github.com/daniel5u/suisei/repository/postgresql/transaction"
 	"gorm.io/gorm"
 )
 
 type User struct {
 	gorm.Model
-	Name     string
-	Email    string
-	Password string
-	Balance  int
-	Token    string
+	Name         string
+	Email        string
+	Password     string
+	Balance      int
+	Token        string
+	Transactions []transaction.Transaction
 }
 
 func repositoryToDomain(userRepository User) user.Domain {
