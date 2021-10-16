@@ -8,13 +8,10 @@ type Domain struct {
 }
 
 type Service interface {
-	Store(booktransactionDomain Domain) (Domain, error)
-	DeleteByTransactionID(transactionid int) error
-	DeleteByBookID(bookid int) error
+	StoreBatch(booktransactionDomain []Domain, transactionid int) error
 }
 
 type Repository interface {
 	Store(booktransactionDomain Domain) (Domain, error)
 	DeleteByTransactionID(transactionid int) error
-	DeleteByBookID(bookid int) error
 }

@@ -38,7 +38,9 @@ import (
 
 	_bookauthorRepository "github.com/daniel5u/suisei/repository/postgresql/bookauthor"
 
+	_booktransactionPresenter "github.com/daniel5u/suisei/presenter/booktransaction"
 	_booktransactionRepository "github.com/daniel5u/suisei/repository/postgresql/booktransaction"
+	_booktransactionService "github.com/daniel5u/suisei/service/booktransaction"
 )
 
 func initConfig() {
@@ -106,20 +108,25 @@ func main() {
 	authorPresenter := _authorPresenter.NewPresenter(authorService)
 
 	transactionRepository := _transactionRepository.NewRepository(db)
-	transactionService := _transactionService.NewService(transactionRepository)
+	transactionService := _transactionService.NewService(transactionRepository, userService)
 	transactionPresenter := _transactionPresenter.NewPresenter(transactionService)
 
 	bookRepository := _bookRepository.NewRepository(db)
 	bookService := _bookService.NewService(bookRepository)
 	bookPresenter := _bookPresenter.NewPresenter(bookService)
 
+	booktransactionRepository := _booktransactionRepository.NewRepository(db)
+	booktransactionService := _booktransactionService.NewService(booktransactionRepository, transactionService, bookService)
+	booktransactionPresenter := _booktransactionPresenter.NewPresenter(booktransactionService)
+
 	routes := _route.PresenterList{
-		UserPresenter:        *userPresenter,
-		CategoryPresenter:    *categoryPresenter,
-		PublisherPresenter:   *publisherPresenter,
-		AuthorPresenter:      *authorPresenter,
-		TransactionPresenter: *transactionPresenter,
-		BookPresenter:        *bookPresenter,
+		UserPresenter:            *userPresenter,
+		CategoryPresenter:        *categoryPresenter,
+		PublisherPresenter:       *publisherPresenter,
+		AuthorPresenter:          *authorPresenter,
+		TransactionPresenter:     *transactionPresenter,
+		BookPresenter:            *bookPresenter,
+		BooktransactionPresenter: *booktransactionPresenter,
 	}
 	routes.RegisterRoute(e)
 

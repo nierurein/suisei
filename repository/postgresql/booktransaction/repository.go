@@ -39,15 +39,3 @@ func (booktransactionRepository *Repository) DeleteByTransactionID(transactionid
 
 	return nil
 }
-
-func (booktransactionRepository *Repository) DeleteByBookID(bookid int) error {
-	var booktransactionRecord BookTransaction
-
-	// permanent delete
-	err := booktransactionRepository.DB.Unscoped().Where("book_id = ?", bookid).Delete(&booktransactionRecord).Error
-	if err != nil {
-		return err
-	}
-
-	return nil
-}

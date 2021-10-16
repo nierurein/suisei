@@ -41,6 +41,15 @@ func (userService *Service) Update(userDomain user.Domain, id int) (user.Domain,
 	return result, nil
 }
 
+func (userService *Service) UpdateBalance(userDomain user.Domain, id int) error {
+	err := userService.repository.UpdateBalance(userDomain, id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (userService *Service) Store(userDomain user.Domain) (user.Domain, error) {
 	result, err := userService.repository.Store(userDomain)
 	if err != nil {

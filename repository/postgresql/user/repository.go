@@ -64,6 +64,17 @@ func (userRepository *Repository) Update(userDomain user.Domain, id int) (user.D
 	return userDomainAfter, nil
 }
 
+func (userRepository *Repository) UpdateBalance(userDomain user.Domain, id int) error {
+	var userRecord User = domainToRepository(userDomain)
+
+	err := userRepository.DB.Where("id = ?", id).Select("balance").Updates(&userRecord).Error
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (userRepository *Repository) Store(userDomain user.Domain) (user.Domain, error) {
 	var userRecord User = domainToRepository(userDomain)
 
