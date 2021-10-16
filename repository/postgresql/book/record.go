@@ -3,20 +3,22 @@ package book
 import (
 	"github.com/daniel5u/suisei/domain/book"
 	"github.com/daniel5u/suisei/repository/postgresql/bookauthor"
+	"github.com/daniel5u/suisei/repository/postgresql/booktransaction"
 	"gorm.io/gorm"
 )
 
 type Book struct {
 	gorm.Model
-	PublisherID     int
-	CategoryID      int
-	ISBN            string
-	Title           string
-	Price           int
-	PublicationYear int
-	PageCount       int
-	Description     string
-	BookAuthors     []bookauthor.BookAuthor
+	PublisherID      int
+	CategoryID       int
+	ISBN             string
+	Title            string
+	Price            int
+	PublicationYear  int
+	PageCount        int
+	Description      string
+	BookAuthors      []bookauthor.BookAuthor
+	BookTransactions []booktransaction.BookTransaction
 }
 
 func repositoryToDomain(bookRepository Book) book.Domain {

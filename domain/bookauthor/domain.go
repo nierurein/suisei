@@ -1,15 +1,8 @@
 package bookauthor
 
-import (
-	"time"
-)
-
 type Domain struct {
-	ID        int
-	BookID    int
-	AuthorID  int
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	BookID   int
+	AuthorID int
 }
 
 type Service interface {

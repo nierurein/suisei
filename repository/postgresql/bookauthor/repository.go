@@ -31,7 +31,8 @@ func (bookauthorRepository *Repository) Store(bookauthorDomain bookauthor.Domain
 func (bookauthorRepository *Repository) DeleteByBookID(bookid int) error {
 	var bookauthorRecord BookAuthor
 
-	err := bookauthorRepository.DB.Where("book_id = ?", bookid).Delete(&bookauthorRecord).Error
+	// permanent delete
+	err := bookauthorRepository.DB.Unscoped().Where("book_id = ?", bookid).Delete(&bookauthorRecord).Error
 	if err != nil {
 		return err
 	}
@@ -42,7 +43,8 @@ func (bookauthorRepository *Repository) DeleteByBookID(bookid int) error {
 func (bookauthorRepository *Repository) DeleteByAuthorID(authorid int) error {
 	var bookauthorRecord BookAuthor
 
-	err := bookauthorRepository.DB.Where("author_id = ?", authorid).Delete(&bookauthorRecord).Error
+	// permanent delete
+	err := bookauthorRepository.DB.Unscoped().Where("author_id = ?", authorid).Delete(&bookauthorRecord).Error
 	if err != nil {
 		return err
 	}

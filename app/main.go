@@ -37,6 +37,8 @@ import (
 	_bookService "github.com/daniel5u/suisei/service/book"
 
 	_bookauthorRepository "github.com/daniel5u/suisei/repository/postgresql/bookauthor"
+
+	_booktransactionRepository "github.com/daniel5u/suisei/repository/postgresql/booktransaction"
 )
 
 func initConfig() {
@@ -73,6 +75,7 @@ func initDB() *gorm.DB {
 		&_transactionRepository.Transaction{},
 		&_bookRepository.Book{},
 		&_bookauthorRepository.BookAuthor{},
+		&_booktransactionRepository.BookTransaction{},
 	)
 
 	return DB
