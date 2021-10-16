@@ -31,6 +31,12 @@ import (
 	_transactionPresenter "github.com/daniel5u/suisei/presenter/transaction"
 	_transactionRepository "github.com/daniel5u/suisei/repository/postgresql/transaction"
 	_transactionService "github.com/daniel5u/suisei/service/transaction"
+
+	_bookPresenter "github.com/daniel5u/suisei/presenter/book"
+	_bookRepository "github.com/daniel5u/suisei/repository/postgresql/book"
+	_bookService "github.com/daniel5u/suisei/service/book"
+
+	_bookauthorRepository "github.com/daniel5u/suisei/repository/postgresql/bookauthor"
 )
 
 func initConfig() {
@@ -65,6 +71,8 @@ func initDB() *gorm.DB {
 		&_publisherRepository.Publisher{},
 		&_authorRepository.Author{},
 		&_transactionRepository.Transaction{},
+		&_bookRepository.Book{},
+		&_bookauthorRepository.BookAuthor{},
 	)
 
 	return DB
@@ -98,12 +106,17 @@ func main() {
 	transactionService := _transactionService.NewService(transactionRepository)
 	transactionPresenter := _transactionPresenter.NewPresenter(transactionService)
 
+	bookRepository := _bookRepository.NewRepository(db)
+	bookService := _bookService.NewService(bookRepository)
+	bookPresenter := _bookPresenter.NewPresenter(bookService)
+
 	routes := _route.PresenterList{
 		UserPresenter:        *userPresenter,
 		CategoryPresenter:    *categoryPresenter,
 		PublisherPresenter:   *publisherPresenter,
 		AuthorPresenter:      *authorPresenter,
 		TransactionPresenter: *transactionPresenter,
+		BookPresenter:        *bookPresenter,
 	}
 	routes.RegisterRoute(e)
 
