@@ -1,0 +1,18 @@
+version: "3"
+services:
+  suisei:
+    build: .
+    restart: "no"
+    ports:
+      - "8080:8080"
+
+  postgres:
+    image: postgres:13.4
+    hostname: postgres.docker
+    environment:
+      POSTGRES_PASSWORD: daniel
+    ports:
+      - "5433:5432"
+    restart: "no"
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql

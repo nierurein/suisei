@@ -6,8 +6,8 @@
       "timeout": 1
     },
     "database": {
-		"host": "127.0.0.1",
-		"user": "daniel",
+		"host": "postgres.docker",
+		"user": "postgres",
 		"password": "daniel",
 		"dbname": "suisei",
 		"port": "5432",

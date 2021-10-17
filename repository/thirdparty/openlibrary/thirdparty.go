@@ -2,7 +2,6 @@ package openlibrary
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 	"strconv"
@@ -39,7 +38,7 @@ func (openLibraryAPI *OpenLibraryAPI) Fetch(links []string) ([]openlibrary.Domai
 			authors = append(authors, dataAuthor["key"])
 		}
 
-		fmt.Println(responseToDomain(data, authors, publicationYear))
+		// fmt.Println(responseToDomain(data, authors, publicationYear))
 
 		results = append(results, responseToDomain(data, authors, publicationYear))
 	}
