@@ -21,6 +21,7 @@ type Domain struct {
 type Service interface {
 	Fetch() ([]Domain, error)
 	GetByID(id int) (Domain, error)
+	GetByTitle(title string) (Domain, error)
 	Update(bookDomain Domain, id int) (Domain, error)
 	Store(bookDomain Domain) (Domain, error)
 	Delete(id int) error
@@ -29,6 +30,7 @@ type Service interface {
 type Repository interface {
 	Fetch() ([]Domain, error)
 	GetByID(id int) (Domain, error)
+	GetByTitle(title string) (Domain, error)
 	Update(bookDomain Domain, id int) (Domain, error)
 	Store(bookDomain Domain) (Domain, error)
 	Delete(id int) error

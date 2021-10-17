@@ -44,6 +44,19 @@ func (bookRepository *Repository) GetByID(id int) (book.Domain, error) {
 	return bookDomain, nil
 }
 
+func (bookRepository *Repository) GetByTitle(title string) (book.Domain, error) {
+	var bookRecord Book
+
+	err := bookRepository.DB.Where("title = ?", title).First(&bookRecord).Error
+	if err != nil {
+		return book.Domain{}, err
+	}
+
+	bookDomain := repositoryToDomain(bookRecord)
+
+	return bookDomain, nil
+}
+
 func (bookRepository *Repository) Update(bookDomain book.Domain, id int) (book.Domain, error) {
 	var bookRecord Book = domainToRepository(bookDomain)
 	var bookRecordAfter Book

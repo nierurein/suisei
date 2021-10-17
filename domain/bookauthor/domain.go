@@ -6,13 +6,10 @@ type Domain struct {
 }
 
 type Service interface {
-	Store(bookauthorDomain Domain) (Domain, error)
-	DeleteByBookID(bookid int) error
-	DeleteByAuthorID(authorid int) error
+	StoreBatch(bookauthorDomain []Domain) error
 }
 
 type Repository interface {
 	Store(bookauthorDomain Domain) (Domain, error)
 	DeleteByBookID(bookid int) error
-	DeleteByAuthorID(authorid int) error
 }

@@ -32,6 +32,15 @@ func (bookService *Service) GetByID(id int) (book.Domain, error) {
 	return result, nil
 }
 
+func (bookService *Service) GetByTitle(title string) (book.Domain, error) {
+	result, err := bookService.repository.GetByTitle(title)
+	if err != nil {
+		return book.Domain{}, err
+	}
+
+	return result, nil
+}
+
 func (bookService *Service) Update(bookDomain book.Domain, id int) (book.Domain, error) {
 	result, err := bookService.repository.Update(bookDomain, id)
 	if err != nil {

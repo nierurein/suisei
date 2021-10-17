@@ -1,6 +1,8 @@
 package bookauthor
 
 import (
+	"errors"
+
 	"github.com/daniel5u/suisei/domain/bookauthor"
 )
 
@@ -14,28 +16,23 @@ func NewService(bookauthorRepository bookauthor.Repository) bookauthor.Service {
 	}
 }
 
-func (bookauthorService *Service) Store(bookauthorDomain bookauthor.Domain) (bookauthor.Domain, error) {
-	result, err := bookauthorService.repository.Store(bookauthorDomain)
-	if err != nil {
-		return bookauthor.Domain{}, err
+func (bookauthorService *Service) StoreBatch(bookauthorDomains []bookauthor.Domain) error {
+	var err error
+
+	if len(bookauthorDomains) == 0 {
+		return errors.New("empty")
 	}
 
-	return result, nil
-}
-
-func (bookauthorService *Service) DeleteByBookID(bookid int) error {
-	err := bookauthorService.repository.DeleteByBookID(bookid)
+	err = bookauthorService.repository.DeleteByBookID(bookauthorDomains[0].BookID)
 	if err != nil {
 		return err
 	}
 
-	return nil
-}
-
-func (bookauthorService *Service) DeleteByAuthorID(authorid int) error {
-	err := bookauthorService.repository.DeleteByAuthorID(authorid)
-	if err != nil {
-		return err
+	for _, bookauthorDomain := range bookauthorDomains {
+		_, err = bookauthorService.repository.Store(bookauthorDomain)
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil

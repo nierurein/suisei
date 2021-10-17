@@ -37,6 +37,10 @@ import (
 	_bookService "github.com/daniel5u/suisei/service/book"
 
 	_bookauthorRepository "github.com/daniel5u/suisei/repository/postgresql/bookauthor"
+	_bookauthorService "github.com/daniel5u/suisei/service/bookauthor"
+
+	_openlibraryRepository "github.com/daniel5u/suisei/repository/thirdparty/openlibrary"
+	_openlibraryService "github.com/daniel5u/suisei/service/openlibrary"
 
 	_booktransactionPresenter "github.com/daniel5u/suisei/presenter/booktransaction"
 	_booktransactionRepository "github.com/daniel5u/suisei/repository/postgresql/booktransaction"
@@ -121,6 +125,21 @@ func main() {
 	booktransactionRepository := _booktransactionRepository.NewRepository(db)
 	booktransactionService := _booktransactionService.NewService(booktransactionRepository, transactionService, bookService)
 	booktransactionPresenter := _booktransactionPresenter.NewPresenter(booktransactionService)
+
+	bookauthorRepository := _bookauthorRepository.NewRepository(db)
+	bookauthorService := _bookauthorService.NewService(bookauthorRepository)
+
+	openlibraryRepository := _openlibraryRepository.NewAPI()
+	openlibraryService := _openlibraryService.NewService(openlibraryRepository, bookService, authorService, bookauthorService, categoryService, publisherService)
+	links := []string{
+		"https://openlibrary.org/books/OL6780869M.json",
+		"https://openlibrary.org/books/OL681397M.json",
+		"https://openlibrary.org/books/OL3945853M.json",
+	}
+	err := openlibraryService.Fetch(links)
+	if err != nil {
+		fmt.Println("unable to use openlibrary api")
+	}
 
 	routes := _route.PresenterList{
 		UserPresenter:            *userPresenter,
