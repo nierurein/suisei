@@ -36,6 +36,7 @@ import (
 	_bookRepository "github.com/daniel5u/suisei/repository/postgresql/book"
 	_bookService "github.com/daniel5u/suisei/service/book"
 
+	_bookauthorPresenter "github.com/daniel5u/suisei/presenter/bookauthor"
 	_bookauthorRepository "github.com/daniel5u/suisei/repository/postgresql/bookauthor"
 	_bookauthorService "github.com/daniel5u/suisei/service/bookauthor"
 
@@ -128,15 +129,16 @@ func main() {
 
 	bookauthorRepository := _bookauthorRepository.NewRepository(db)
 	bookauthorService := _bookauthorService.NewService(bookauthorRepository)
+	bookauthorPresenter := _bookauthorPresenter.NewPresenter(bookauthorService)
 
 	openlibraryRepository := _openlibraryRepository.NewAPI()
 	openlibraryService := _openlibraryService.NewService(openlibraryRepository, bookService, authorService, bookauthorService, categoryService, publisherService)
-	links := []string{
+	endpoints := []string{
 		"https://openlibrary.org/books/OL6780869M.json",
 		"https://openlibrary.org/books/OL681397M.json",
 		"https://openlibrary.org/books/OL3945853M.json",
 	}
-	err := openlibraryService.Fetch(links)
+	err := openlibraryService.Fetch(endpoints)
 	if err != nil {
 		fmt.Println("unable to use openlibrary api")
 	}
@@ -149,6 +151,7 @@ func main() {
 		TransactionPresenter:     *transactionPresenter,
 		BookPresenter:            *bookPresenter,
 		BooktransactionPresenter: *booktransactionPresenter,
+		BookauthorPresenter:      *bookauthorPresenter,
 	}
 	routes.RegisterRoute(e)
 

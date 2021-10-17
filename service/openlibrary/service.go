@@ -34,6 +34,7 @@ func (openlibraryRepository *Service) Fetch(links []string) error {
 	var categoryDomain category.Domain
 	var publisherDomain publisher.Domain
 	var bookDomain book.Domain
+	var bookDomainBefore book.Domain
 	var bookDomainAfter book.Domain
 	var authorDomain author.Domain
 	var bookauthorDomains []bookauthor.Domain
@@ -45,6 +46,12 @@ func (openlibraryRepository *Service) Fetch(links []string) error {
 	}
 
 	for _, openlibraryDomain := range openlibraryDomains {
+		bookDomainBefore, _ = openlibraryRepository.bookService.GetByTitle(openlibraryDomain.Title)
+		// skip inserted book
+		if bookDomainBefore.Title != "" {
+			continue
+		}
+
 		categoryDomain, _ = openlibraryRepository.categoryService.GetByName(openlibraryDomain.Category)
 		if categoryDomain.Name == "" {
 			categoryDomain, err = openlibraryRepository.categoryService.Store(category.Domain{
