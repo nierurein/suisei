@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - development
+      - main
   pull_request:
 jobs:
   golangci:
