@@ -52,7 +52,10 @@ func (publisherPresenter *Presenter) GetByID(echoContext echo.Context) error {
 func (publisherPresenter *Presenter) Store(echoContext echo.Context) error {
 	var publisherRequest Request
 
-	echoContext.Bind(&publisherRequest)
+	err := echoContext.Bind(&publisherRequest)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
 
 	publisherDomain := requestToDomain(publisherRequest)
 

@@ -31,6 +31,21 @@ import (
 	_transactionPresenter "github.com/daniel5u/suisei/presenter/transaction"
 	_transactionRepository "github.com/daniel5u/suisei/repository/postgresql/transaction"
 	_transactionService "github.com/daniel5u/suisei/service/transaction"
+
+	_bookPresenter "github.com/daniel5u/suisei/presenter/book"
+	_bookRepository "github.com/daniel5u/suisei/repository/postgresql/book"
+	_bookService "github.com/daniel5u/suisei/service/book"
+
+	_bookauthorPresenter "github.com/daniel5u/suisei/presenter/bookauthor"
+	_bookauthorRepository "github.com/daniel5u/suisei/repository/postgresql/bookauthor"
+	_bookauthorService "github.com/daniel5u/suisei/service/bookauthor"
+
+	_openlibraryRepository "github.com/daniel5u/suisei/repository/thirdparty/openlibrary"
+	_openlibraryService "github.com/daniel5u/suisei/service/openlibrary"
+
+	_booktransactionPresenter "github.com/daniel5u/suisei/presenter/booktransaction"
+	_booktransactionRepository "github.com/daniel5u/suisei/repository/postgresql/booktransaction"
+	_booktransactionService "github.com/daniel5u/suisei/service/booktransaction"
 )
 
 func initConfig() {
@@ -59,13 +74,19 @@ func initDB() *gorm.DB {
 		panic(err.Error())
 	}
 
-	DB.AutoMigrate(
+	err = DB.AutoMigrate(
 		&_userRepository.User{},
 		&_categoryRepository.Category{},
 		&_publisherRepository.Publisher{},
 		&_authorRepository.Author{},
 		&_transactionRepository.Transaction{},
+		&_bookRepository.Book{},
+		&_bookauthorRepository.BookAuthor{},
+		&_booktransactionRepository.BookTransaction{},
 	)
+	if err != nil {
+		panic(err.Error())
+	}
 
 	return DB
 }
@@ -95,15 +116,42 @@ func main() {
 	authorPresenter := _authorPresenter.NewPresenter(authorService)
 
 	transactionRepository := _transactionRepository.NewRepository(db)
-	transactionService := _transactionService.NewService(transactionRepository)
+	transactionService := _transactionService.NewService(transactionRepository, userService)
 	transactionPresenter := _transactionPresenter.NewPresenter(transactionService)
 
+	bookRepository := _bookRepository.NewRepository(db)
+	bookService := _bookService.NewService(bookRepository)
+	bookPresenter := _bookPresenter.NewPresenter(bookService)
+
+	booktransactionRepository := _booktransactionRepository.NewRepository(db)
+	booktransactionService := _booktransactionService.NewService(booktransactionRepository, transactionService, bookService)
+	booktransactionPresenter := _booktransactionPresenter.NewPresenter(booktransactionService)
+
+	bookauthorRepository := _bookauthorRepository.NewRepository(db)
+	bookauthorService := _bookauthorService.NewService(bookauthorRepository)
+	bookauthorPresenter := _bookauthorPresenter.NewPresenter(bookauthorService)
+
+	openlibraryRepository := _openlibraryRepository.NewAPI()
+	openlibraryService := _openlibraryService.NewService(openlibraryRepository, bookService, authorService, bookauthorService, categoryService, publisherService)
+	endpoints := []string{
+		"https://openlibrary.org/books/OL6780869M.json",
+		"https://openlibrary.org/books/OL681397M.json",
+		"https://openlibrary.org/books/OL3945853M.json",
+	}
+	err := openlibraryService.Fetch(endpoints)
+	if err != nil {
+		fmt.Println("unable to use openlibrary api")
+	}
+
 	routes := _route.PresenterList{
-		UserPresenter:        *userPresenter,
-		CategoryPresenter:    *categoryPresenter,
-		PublisherPresenter:   *publisherPresenter,
-		AuthorPresenter:      *authorPresenter,
-		TransactionPresenter: *transactionPresenter,
+		UserPresenter:            *userPresenter,
+		CategoryPresenter:        *categoryPresenter,
+		PublisherPresenter:       *publisherPresenter,
+		AuthorPresenter:          *authorPresenter,
+		TransactionPresenter:     *transactionPresenter,
+		BookPresenter:            *bookPresenter,
+		BooktransactionPresenter: *booktransactionPresenter,
+		BookauthorPresenter:      *bookauthorPresenter,
 	}
 	routes.RegisterRoute(e)
 

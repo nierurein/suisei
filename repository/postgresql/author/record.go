@@ -2,12 +2,14 @@ package author
 
 import (
 	"github.com/daniel5u/suisei/domain/author"
+	"github.com/daniel5u/suisei/repository/postgresql/bookauthor"
 	"gorm.io/gorm"
 )
 
 type Author struct {
 	gorm.Model
-	Name string
+	Name        string
+	BookAuthors []bookauthor.BookAuthor
 }
 
 func repositoryToDomain(authorRepository Author) author.Domain {

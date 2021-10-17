@@ -1,101 +1,101 @@
-package user
+package book
 
 import (
 	"net/http"
 	"strconv"
 
-	"github.com/daniel5u/suisei/domain/user"
+	"github.com/daniel5u/suisei/domain/book"
 	"github.com/labstack/echo/v4"
 )
 
 type Presenter struct {
-	service user.Service
+	service book.Service
 }
 
-func NewPresenter(userService user.Service) *Presenter {
+func NewPresenter(bookService book.Service) *Presenter {
 	return &Presenter{
-		service: userService,
+		service: bookService,
 	}
 }
 
-func (userPresenter *Presenter) Fetch(echoContext echo.Context) error {
-	userDomains, err := userPresenter.service.Fetch()
+func (bookPresenter *Presenter) Fetch(echoContext echo.Context) error {
+	bookDomains, err := bookPresenter.service.Fetch()
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	var userResponses []Response
-	for _, userDomain := range userDomains {
-		userResponses = append(userResponses, domainToResponse(userDomain))
+	var bookResponses []Response
+	for _, bookDomain := range bookDomains {
+		bookResponses = append(bookResponses, domainToResponse(bookDomain))
 	}
 
 	return echoContext.JSON(http.StatusOK, map[string]interface{}{
 		"status": "success",
-		"result": userResponses,
+		"result": bookResponses,
 	})
 }
 
-func (userPresenter *Presenter) GetByID(echoContext echo.Context) error {
+func (bookPresenter *Presenter) GetByID(echoContext echo.Context) error {
 	id, _ := strconv.Atoi(echoContext.Param("id"))
 
-	userDomain, err := userPresenter.service.GetByID(id)
+	bookDomain, err := bookPresenter.service.GetByID(id)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
 	return echoContext.JSON(http.StatusOK, map[string]interface{}{
 		"status": "success",
-		"result": domainToResponse(userDomain),
+		"result": domainToResponse(bookDomain),
 	})
 }
 
-func (userPresenter *Presenter) Update(echoContext echo.Context) error {
-	var userRequest Request
+func (bookPresenter *Presenter) Update(echoContext echo.Context) error {
+	var bookRequest Request
 
-	err := echoContext.Bind(&userRequest)
+	err := echoContext.Bind(&bookRequest)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 	id, _ := strconv.Atoi(echoContext.Param("id"))
 
-	userDomain := requestToDomain(userRequest)
+	bookDomain := requestToDomain(bookRequest)
 
-	userDomainAfter, err := userPresenter.service.Update(userDomain, id)
+	bookDomainAfter, err := bookPresenter.service.Update(bookDomain, id)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
 	return echoContext.JSON(http.StatusOK, map[string]interface{}{
 		"status": "success",
-		"result": domainToResponse(userDomainAfter),
+		"result": domainToResponse(bookDomainAfter),
 	})
 }
 
-func (userPresenter *Presenter) Store(echoContext echo.Context) error {
-	var userRequest Request
+func (bookPresenter *Presenter) Store(echoContext echo.Context) error {
+	var bookRequest Request
 
-	err := echoContext.Bind(&userRequest)
+	err := echoContext.Bind(&bookRequest)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	userDomain := requestToDomain(userRequest)
+	bookDomain := requestToDomain(bookRequest)
 
-	userDomainAfter, err := userPresenter.service.Store(userDomain)
+	bookDomainAfter, err := bookPresenter.service.Store(bookDomain)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
 	return echoContext.JSON(http.StatusOK, map[string]interface{}{
 		"status": "success",
-		"result": domainToResponse(userDomainAfter),
+		"result": domainToResponse(bookDomainAfter),
 	})
 }
 
-func (userPresenter *Presenter) Delete(echoContext echo.Context) error {
+func (bookPresenter *Presenter) Delete(echoContext echo.Context) error {
 	id, _ := strconv.Atoi(echoContext.Param("id"))
 
-	err := userPresenter.service.Delete(id)
+	err := bookPresenter.service.Delete(id)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}

@@ -2,14 +2,16 @@ package transaction
 
 import (
 	"github.com/daniel5u/suisei/domain/transaction"
+	"github.com/daniel5u/suisei/repository/postgresql/booktransaction"
 	"gorm.io/gorm"
 )
 
 type Transaction struct {
 	gorm.Model
-	UserID     int
-	TotalPrice int
-	Status     int
+	UserID           int
+	TotalPrice       int
+	Status           int
+	BookTransactions []booktransaction.BookTransaction
 }
 
 func repositoryToDomain(transactionRepository Transaction) transaction.Domain {

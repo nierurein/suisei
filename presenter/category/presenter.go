@@ -52,7 +52,10 @@ func (categoryPresenter *Presenter) GetByID(echoContext echo.Context) error {
 func (categoryPresenter *Presenter) Store(echoContext echo.Context) error {
 	var categoryRequest Request
 
-	echoContext.Bind(&categoryRequest)
+	err := echoContext.Bind(&categoryRequest)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
 
 	categoryDomain := requestToDomain(categoryRequest)
 

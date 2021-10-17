@@ -2,12 +2,14 @@ package publisher
 
 import (
 	"github.com/daniel5u/suisei/domain/publisher"
+	"github.com/daniel5u/suisei/repository/postgresql/book"
 	"gorm.io/gorm"
 )
 
 type Publisher struct {
 	gorm.Model
-	Name string
+	Name  string
+	Books []book.Book
 }
 
 func repositoryToDomain(publisherRepository Publisher) publisher.Domain {
