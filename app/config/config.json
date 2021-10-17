@@ -1,0 +1,21 @@
+{
+    "server": {
+      "port": ":8080"
+    },
+    "context": {
+      "timeout": 1
+    },
+    "database": {
+		"host": "postgres.docker",
+		"user": "postgres",
+		"password": "daniel",
+		"dbname": "suisei",
+		"port": "5432",
+		"sslmode": "disable",
+		"TimeZone": "Asia/Shanghai"
+    },
+    "jwt": {
+      "secret" : "kyoumokawaii",
+      "expired" : 1
+    }
+  }
